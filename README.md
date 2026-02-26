@@ -20,14 +20,14 @@ GitHub (raw markdown)
 2. Parse 3 markdown tables → DataFrames
    ├── FAANG+  (66 rows,   7 companies)
    ├── Quant   (10 rows,   5 companies)
-   └── Other   (388 rows, 232 companies)
+   └── General (388 rows, 232 companies)
         │
         ▼
 3. Scrape job descriptions from each posting URL
    (routed by job board: Greenhouse, Workday, Lever, Ashby, SmartRecruiters, generic)
         │
         ▼
-4. Cache enriched DataFrame → other_df_with_descriptions.parquet
+4. Cache enriched DataFrame → general_df_with_descriptions.parquet
 ```
 
 ### Job Board Coverage
@@ -45,7 +45,7 @@ The scraper detects the job board from the URL and uses the most reliable extrac
 
 ### Current Results
 
-- **388** "Other" company internship postings parsed
+- **388** "General" company internship postings parsed
 - **290/388** (74.7%) job descriptions successfully extracted
 - Enriched dataset cached as Parquet for fast reloads
 
@@ -71,7 +71,7 @@ internship-mining/
 ├── process_data.ipynb          # Exploratory notebook (prototyping & EDA)
 ├── process_data.py             # Refactored pipeline script
 ├── raw_internships.md          # Cached raw markdown from SpeedyApply
-├── other_df_with_descriptions.parquet  # Enriched dataset cache
+├── general_df_with_descriptions.parquet  # Enriched dataset cache
 └── .gitignore
 ```
 
@@ -146,11 +146,11 @@ With clean, structured job descriptions across hundreds of AI/ML internship post
 
 ### Skills & Technology Trends
 - **Keyword frequency analysis**: What tools appear most often in requirements? (Python, SQL, PyTorch, Spark, dbt, Airflow, etc.)
-- **Skills by company tier**: Do FAANG+ roles emphasize different skills than "Other" companies? Do quant firms have a distinct tech stack?
+- **Skills by company tier**: Do FAANG+ roles emphasize different skills than "General" companies? Do quant firms have a distinct tech stack?
 - **Emerging vs. declining keywords**: Track how often terms like "LLM", "RAG", "MLOps", or "Spark" appear over time as you re-run the pipeline.
 
 ### Salary Intelligence
-- **Salary distribution by tier**: FAANG+ averages $50–67/hr, Quant hits $125/hr — how does the "Other" category distribute?
+- **Salary distribution by tier**: FAANG+ averages $50–67/hr, Quant hits $125/hr — how does the "General" category distribute?
 - **Salary vs. location**: Do postings in SF/NYC pay more than remote or Midwest roles?
 - **Salary vs. required degree**: Do PhD-specific roles command a premium even within the same company?
 

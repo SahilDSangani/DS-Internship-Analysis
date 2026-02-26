@@ -3,7 +3,7 @@ process_data.py — Internship data pipeline
 
 Steps:
   1. Download raw internship markdown from SpeedyApply GitHub repo
-  2. Parse FAANG, Quant, and Other internship tables into DataFrames
+  2. Parse FAANG, Quant, and General internship tables into DataFrames
   3. Scrape job descriptions from each posting URL
   4. Cache the enriched DataFrame to disk (Parquet) so step 3 only runs once
 
@@ -40,7 +40,7 @@ warnings.filterwarnings("ignore")
 
 RAW_MD_URL  = "https://raw.githubusercontent.com/speedyapply/2026-AI-College-Jobs/main/README.md"
 RAW_MD_PATH = Path("raw_internships.md")
-CACHE_PATH  = Path("other_df_with_descriptions.parquet")
+CACHE_PATH  = Path("general_df_with_descriptions.parquet")
 
 SCRAPE_DELAY = 0.5  # seconds between requests
 
@@ -105,10 +105,10 @@ def extract_md_table(md_text: str, start_marker: str, end_marker: str):
 def load_tables(md_text: str):
     faang_df = extract_md_table(md_text, "<!-- TABLE_FAANG_START -->", "<!-- TABLE_FAANG_END -->")
     quant_df = extract_md_table(md_text, "<!-- TABLE_QUANT_START -->", "<!-- TABLE_QUANT_END -->")
-    other_df = extract_md_table(md_text, "<!-- TABLE_START -->", "<!-- TABLE_END -->")
+    general_df = extract_md_table(md_text, "<!-- TABLE_START -->", "<!-- TABLE_END -->")
 
-    print(f"Faang: {faang_df.shape}  |  Quant: {quant_df.shape}  |  Other: {other_df.shape}")
-    return faang_df, quant_df, other_df
+    print(f"Faang: {faang_df.shape}  |  Quant: {quant_df.shape}  |  General: {general_df.shape}")
+    return faang_df, quant_df, general_df
 
 
 # ---------------------------------------------------------------------------
@@ -321,19 +321,19 @@ def main(refresh: bool = False):
     md_text = load_raw_md()
 
     # Step 2 — parse tables
-    faang_df, quant_df, other_df = load_tables(md_text)
+    faang_df, quant_df, general_df = load_tables(md_text)
 
     # Step 3/4 — descriptions (cached)
     if not refresh and CACHE_PATH.exists():
-        other_df = load_df()
+        general_df = load_df()
     else:
-        other_df = scrape_descriptions(other_df)
-        save_df(other_df)
+        general_df = scrape_descriptions(general_df)
+        save_df(general_df)
 
     print("\nSample rows with descriptions:")
-    print(other_df[["Company", "Position", "description_text"]].head(5).to_string())
+    print(general_df[["Company", "Position", "description_text"]].head(5).to_string())
 
-    return faang_df, quant_df, other_df
+    return faang_df, quant_df, general_df
 
 
 if __name__ == "__main__":
